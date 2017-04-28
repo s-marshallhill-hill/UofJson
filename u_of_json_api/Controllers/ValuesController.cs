@@ -1,19 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Diagnostics;
+using u_of_json_api.Models;
 
 namespace u_of_json_api.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly SchoolContext _schoolContext;
+
+        public ValuesController(SchoolContext context)
+        {
+            _schoolContext = context;
+            context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+        }
+
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Models.Student> Get()
         {
-            return new string[] { "value1", "value2" };
+            IEnumerable<Models.Student> students;
+
+            students = _schoolContext.Students.Include(s => s.Rosters).ToList();
+            //students =  schoolContext.Students.AsNoTracking().ToList();
+            foreach (Student student in students)
+            {
+                Debug.WriteLine(student.ToString());
+                if (student.Rosters != null)
+                {
+                    Debug.WriteLine(student.Rosters);
+                }
+            }
+            return students;
+
         }
 
         // GET api/values/5
