@@ -50,15 +50,18 @@ namespace u_of_json_api.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Student student)
+        [Route("[action]")]
+        public void Create([FromBody]Student student)
         {
             _schoolContext.Students.Add(student);
             _schoolContext.SaveChanges();
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put([FromBody]Student student)
+        //[HttpPut("{id}")]
+        [HttpPut]
+        [Route("[action]/{courseId:int}")]
+        public void Update([FromBody]Student student)
         {
             _schoolContext.ChangeTracker.TrackGraph(student, e => e.Entry.State = EntityState.Modified);
             _schoolContext.SaveChanges();
@@ -66,11 +69,20 @@ namespace u_of_json_api.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        //[HttpDelete]
+        //[Route("[action]/{courseId:int}")]
         public void Delete(int id)
         {
             var student = _schoolContext.Students.Find(id);
-            _schoolContext.Entry(student).State = EntityState.Deleted;
-            _schoolContext.SaveChanges();
+            if (student != null)
+            {
+                _schoolContext.Entry(student).State = EntityState.Deleted;
+                _schoolContext.SaveChanges();
+            }
+            else
+            {
+                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+            }
         }
     }
 }

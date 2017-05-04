@@ -33,7 +33,59 @@ namespace u_of_json_api.Controllers
             IEnumerable<RosterTransformer> rostersData;
 
 
-            var rosters = _schoolContext.Rosters.Include(r => r.Course).Include(r => r.Student).Include(r => r.Grade).AsNoTracking().ToList();
+            var rosters = _schoolContext.Rosters
+                .Include(r => r.Course)
+                .Include(r => r.Student)
+                .Include(r => r.Grade)
+                .ToList();
+            rostersData = rosters.Select(r => new RosterTransformer(r));
+
+            return rostersData;
+        }
+
+        [HttpGet]
+        [Route("[action]/{studentId:int}")]
+        public IEnumerable<RosterTransformer> FilterByStudent( int studentId)
+        {
+            IEnumerable<RosterTransformer> rostersData;
+            var rosters = _schoolContext.Rosters
+                .Include(r => r.Course)
+                .Include(r => r.Student)
+                .Include(r => r.Grade)
+                .Where(r=> r.studentId == studentId)
+                .ToList();
+            rostersData = rosters.Select(r => new RosterTransformer(r));
+
+            return rostersData;
+        }
+
+        [HttpGet]
+        [Route("[action]/{courseId:int}")]
+        public IEnumerable<RosterTransformer> FilterByCourse(int courseId)
+        {
+            IEnumerable<RosterTransformer> rostersData;
+            var rosters = _schoolContext.Rosters
+                .Include(r => r.Course)
+                .Include(r => r.Student)
+                .Include(r => r.Grade)
+                .Where(r => r.courseId == courseId)
+                .ToList();
+            rostersData = rosters.Select(r => new RosterTransformer(r));
+
+            return rostersData;
+        }
+
+        [HttpGet]
+        [Route("[action]/{gradeId:int}")]
+        public IEnumerable<RosterTransformer> FilterByGrade(int gradeId)
+        {
+            IEnumerable<RosterTransformer> rostersData;
+            var rosters = _schoolContext.Rosters
+                .Include(r => r.Course)
+                .Include(r => r.Student)
+                .Include(r => r.Grade)
+                .Where(r => r.gradeId == gradeId)
+                .ToList();
             rostersData = rosters.Select(r => new RosterTransformer(r));
 
             return rostersData;

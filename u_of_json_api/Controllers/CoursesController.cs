@@ -28,6 +28,7 @@ namespace u_of_json_api.Controllers
 
         // GET: api/values
         [HttpGet]
+        //[Route("[action]")]
         public IEnumerable<Course> Get()
         {
 
@@ -40,6 +41,7 @@ namespace u_of_json_api.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
+        //[Route("[action]/{courseId:int}")]
         public Course Get(int id)
         {
             Course course = _schoolContext.Courses.Find(id);
@@ -49,7 +51,8 @@ namespace u_of_json_api.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Course course)
+        [Route("[action]")]
+        public void Create([FromBody]Course course)
         {
             try
             {
@@ -64,8 +67,10 @@ namespace u_of_json_api.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put([FromBody]Course course)
+        [HttpPut]
+        //[HttpPut("{id}")]
+        [Route("[action]")]
+        public void Update([FromBody]Course course)
         {
             _schoolContext.ChangeTracker.TrackGraph(course, e => e.Entry.State = EntityState.Modified);
             _schoolContext.SaveChanges();
@@ -73,6 +78,8 @@ namespace u_of_json_api.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        //[HttpDelete]
+        //[Route("[action]/{courseId:int}")]
         public void Delete(int id)
         {
             try
