@@ -60,7 +60,7 @@ namespace u_of_json_api.Controllers
         // PUT api/values/5
         //[HttpPut("{id}")]
         [HttpPut]
-        [Route("[action]/{courseId:int}")]
+        [Route("[action]/{studentId:int}")]
         public void Update([FromBody]Student student)
         {
             _schoolContext.ChangeTracker.TrackGraph(student, e => e.Entry.State = EntityState.Modified);

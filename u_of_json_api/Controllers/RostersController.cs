@@ -28,56 +28,60 @@ namespace u_of_json_api.Controllers
 
         // GET: api/values
         [HttpGet]
-        public IEnumerable<RosterTransformer> Get()
+        public IEnumerable<Roster> Get()
         {
-            IEnumerable<RosterTransformer> rostersData;
+            //IEnumerable<RosterTransformer> rostersData;
 
+            return _schoolContext.Rosters.ToList();
 
-            var rosters = _schoolContext.Rosters
-                .Include(r => r.Course)
-                .Include(r => r.Student)
-                .Include(r => r.Grade)
-                .ToList();
-            rostersData = rosters.Select(r => new RosterTransformer(r));
+            //var rosters = _schoolContext.Rosters
+            //    .Include(r => r.Course)
+            //    .Include(r => r.Student)
+            //    .Include(r => r.Grade)
+            //    .ToList();
+            //rostersData = rosters.Select(r => new RosterTransformer(r));
 
-            return rostersData;
+            //return rostersData;
         }
 
         [HttpGet]
         [Route("[action]/{studentId:int}")]
-        public IEnumerable<RosterTransformer> FilterByStudent( int studentId)
+        public IEnumerable<Roster> FilterByStudent( int studentId)
         {
-            IEnumerable<RosterTransformer> rostersData;
-            var rosters = _schoolContext.Rosters
-                .Include(r => r.Course)
-                .Include(r => r.Student)
-                .Include(r => r.Grade)
-                .Where(r=> r.studentId == studentId)
-                .ToList();
-            rostersData = rosters.Select(r => new RosterTransformer(r));
+            return _schoolContext.Rosters.Where(r => r.studentId == studentId).ToList();
+            //IEnumerable<RosterTransformer> rostersData;
+            //var rosters = _schoolContext.Rosters
+            //    .Include(r => r.Course)
+            //    .Include(r => r.Student)
+            //    .Include(r => r.Grade)
+            //    .Where(r=> r.studentId == studentId)
+            //    .ToList();
+            //rostersData = rosters.Select(r => new RosterTransformer(r));
 
-            return rostersData;
+            //return rostersData;
         }
 
         [HttpGet]
         [Route("[action]/{courseId:int}")]
-        public IEnumerable<RosterTransformer> FilterByCourse(int courseId)
+        public IEnumerable<Roster> FilterByCourse(int courseId)
         {
-            IEnumerable<RosterTransformer> rostersData;
-            var rosters = _schoolContext.Rosters
-                .Include(r => r.Course)
-                .Include(r => r.Student)
-                .Include(r => r.Grade)
-                .Where(r => r.courseId == courseId)
-                .ToList();
-            rostersData = rosters.Select(r => new RosterTransformer(r));
+            return _schoolContext.Rosters.Where(r => r.courseId == courseId).ToList();
 
-            return rostersData;
+            //IEnumerable<RosterTransformer> rostersData;
+            //var rosters = _schoolContext.Rosters
+            //    .Include(r => r.Course)
+            //    .Include(r => r.Student)
+            //    .Include(r => r.Grade)
+            //    .Where(r => r.courseId == courseId)
+            //    .ToList();
+            //rostersData = rosters.Select(r => new RosterTransformer(r));
+
+            //return rostersData;
         }
 
         [HttpGet]
         [Route("[action]/{gradeId:int}")]
-        public IEnumerable<RosterTransformer> FilterByGrade(int gradeId)
+        public IEnumerable<Roster> FilterByGrade(int gradeId)
         {
             IEnumerable<RosterTransformer> rostersData;
             var rosters = _schoolContext.Rosters
@@ -86,9 +90,9 @@ namespace u_of_json_api.Controllers
                 .Include(r => r.Grade)
                 .Where(r => r.gradeId == gradeId)
                 .ToList();
-            rostersData = rosters.Select(r => new RosterTransformer(r));
+            //rostersData = rosters.Select(r => new RosterTransformer(r));
 
-            return rostersData;
+            return rosters;
         }
 
         // GET api/values/5
@@ -103,17 +107,19 @@ namespace u_of_json_api.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Roster roster)
+        public Roster Post([FromBody]Roster roster)
         {
             try
             {
                 _schoolContext.Rosters.Add(roster);
                 _schoolContext.SaveChanges();
+                return roster;
             }
             catch (Exception ex)
             {
 
                 Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                return null;
             }
         }
 

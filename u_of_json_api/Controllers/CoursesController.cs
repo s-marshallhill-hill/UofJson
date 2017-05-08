@@ -33,8 +33,8 @@ namespace u_of_json_api.Controllers
         {
 
             var courses = _schoolContext.Courses
-                .Include(c => c.Rosters).ThenInclude(r => r.Student)
-                .Include(c => c.Rosters).ThenInclude(r => r.Grade)
+                //.Include(c => c.Rosters).ThenInclude(r => r.Student)
+                //.Include(c => c.Rosters).ThenInclude(r => r.Grade)
                 .ToList();
             return courses;
         }
@@ -69,7 +69,7 @@ namespace u_of_json_api.Controllers
         // PUT api/values/5
         [HttpPut]
         //[HttpPut("{id}")]
-        [Route("[action]")]
+        [Route("[action]/{courseId:int}")]
         public void Update([FromBody]Course course)
         {
             _schoolContext.ChangeTracker.TrackGraph(course, e => e.Entry.State = EntityState.Modified);
